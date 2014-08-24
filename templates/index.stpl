@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<link rel="stylesheet" href="styles.css" />
+	<script src="basic-compat.min.js"></script>
+	<script src="stpl.min.js"></script>
+	<script src="D.min.js"></script>
+	<script>
+		// extend basic-compat
+		$.get = function(url){
+			var d = D()
+				, xhr = new XMLHttpRequest()
+			;
+			xhr.open('GET', url);
+			xhr.onload = function(){
+				try{
+					if( xhr.status !== 200 && xhr.status !== 304 ){
+						throw 'GET ' + url + ' ' + xhr.status + ' (' + xhr.statusText + ')';
+					}
+					d.resolve(this.responseText);
+				} catch(e){
+					d.reject(e);
+				}
+			};
+			xhr.onerror = d.reject;
+			xhr.send();
+			return d.promise;
+		};
+		$.getJSON = function(url){
+			return $.get(url)
+				.success(function(res){
+					return JSON.parse(res)
+				})
+			;
+		};
+		$.fn.replace = function(elmt){
+			var self = this;
+			elmt.nodeType && (elmt = $(elmt));
+			return $.each(elmt,function(){
+				this.parentNode.insertBefore(self[0] || self, this);
+				this.parentNode && this.parentNode.removeChild(this);
+			});
+		}
+
+		// get required templates
+		$.get('test.stpl')
+			.success(function(tpl){
+				stpl.registerString('test',tpl)
+			})
+		;
+		$(function(){
+			$('body').on('click', 'button.testrunner', function(){
+				var button = $(this)
+					, parent = button.closest('li')
+					, testName = button.attr('rel')
+					, testStatusPromise = $.getJSON('/run/'+testName)
+				;
+				button.attr('disabled', 'disabled');
+				parent
+					.removeClass('status-unknown status-failed status-ok')
+					.addClass('status-running')
+				;
+				testStatusPromise
+					.ensure(function(){
+						parent.removeClass('status-running');
+						button.attr('disabled', '');
+					})
+					.success(function(res){
+						$(stpl('test', res)).replace($('#'+testName));
+					})
+					.error(function(error){
+						parent.addClass('status-failed')
+						console.log(error)
+						parent.attr('title', error)
+					})
+				;
+			})
+		});
+	</script>
+</head>
+<body>
+	<h1>White Walker</h1>
+	{{body}}
+</body>
+</html>

@@ -1,0 +1,8 @@
+
+	<li id="{{name}}" class="status-{{status}}">
+		<span class="name">{{name}}</span>
+		<span class="datetime">{{status|!=running?}}{{endTime}}{{?status}}{{status|=running?}}{{startTime}}{{?status}}</span>
+		<span class="duration">{{duration}}</span>
+		<button type="buttton" class="testrunner" rel="{{name}}">run test</button>
+		<div>{{out|nl2br}}</div>
+	</li>

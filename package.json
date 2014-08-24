@@ -1,0 +1,12 @@
+{
+  "name": "whiteWalker",
+  "description": "automated nightwatch testing front-end",
+  "bin": {
+    "whitewalker": "./bin/whitewalker"
+  },
+  "dependencies": {
+    "connect": "^2.25.7",
+    "d.js": "^0.6.0",
+    "nightwatch": "^0.5.18"
+  }
+}

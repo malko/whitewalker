@@ -1,0 +1,54 @@
+body{
+	font-size:.675em;
+	font-family:Sans Serif;
+	color:#333;
+}
+
+ul{
+	list-style-type:none;
+	padding:0;
+}
+
+li{
+	margin:20px;;
+	font-size:1.1rem;
+	display:table-row;
+}
+li.status-unknown{
+	background:#eee;
+}
+li.status-ok{
+	background:#dfd;
+}
+li.status-running{
+	background:#ddf;
+}
+li.status-failed{
+	background:#fdd;
+}
+
+
+li > span{
+	display:table-cell;
+	padding:.2em .8em;
+}
+
+button{
+	border: 1px solid #333;
+	border-radius:.2em;
+	box-shadow: 1px 1px 1px #333;
+	color:#333;
+	background:#ddd;
+}
+button:hover{
+	background:#eee;
+}
+button:focus{
+	background:#eee;
+	outline:none;
+	box-shadow: 1px 1px 1px #A83;
+}
+button:active{
+	background:#eee;
+	box-shadow:none;
+}
