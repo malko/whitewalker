@@ -109,7 +109,7 @@ app
 		var testSucceed = function(result){
 				var test = runningTests[testName];
 				test.endTime = new Date();
-				test.duration = test.endTime.getTime() - test.startTime.getTime();
+				test.duration = (test.endTime.getTime() - test.startTime.getTime())/1000 + 's';
 				test.status = 'ok';
 				test.out = result.join('\n').replace(/\[[0-9;]+m/g,'');
 				res.end(JSON.stringify(test));
@@ -117,9 +117,9 @@ app
 			, testFailed = function(err){
 				var test = runningTests[testName];
 				test.endTime = new Date();
-				test.duration = test.endTime.getTime() - test.startTime.getTime();
+				test.duration = (test.endTime.getTime() - test.startTime.getTime())/1000 + 's'
 				test.status = 'failed';
-				test.out = err;
+				test.out = err.toString();
 				res.end(JSON.stringify(test));
 			}
 			, end = function(){
@@ -127,8 +127,8 @@ app
 				next();
 			}
 		;
-		if( testName in runningTests){
-			return runningTests[testName]
+		if( testName in runningTestsPromise){
+			return runningTestsPromise[testName]
 				.success(testSucceed)
 				.error(testFailed)
 				.ensure(end)
