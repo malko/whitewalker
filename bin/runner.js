@@ -178,7 +178,7 @@ app
 		};
 		runningTestsPromise[testName] = prepareTmpTest(testName)
 			.success(function(){
-				return execPromise(settings.paths.nightwatch + ' -e chrome -c nightwatch.json -t ./tmp/' + testName + '.js');
+				return execPromise(settings.paths.nightwatch + ' -e chrome -c ./nightwatch.json -t ./tmp/' + testName + '.js');
 			})
 			.success(testSucceed)
 			.error(testFailed)
