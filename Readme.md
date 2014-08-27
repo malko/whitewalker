@@ -6,7 +6,7 @@ this is a work in progress so don't use it for now !
 - [ ] read available environments from nightwatch.json
 - [ ] allow running specific environment
 - [ ] allow running all environment
-- [ ] get initial test data from json cache and/or xml reports
+- [x] get initial test data from json cache and/or xml reports
 - [ ] cache tests data list to json file
 - [ ] send all tests data to index and remove server side template parsing
 - [ ] read and send xml reports instead of nightwatch command output (or allow both)
