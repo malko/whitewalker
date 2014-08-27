@@ -62,6 +62,10 @@ settings.paths.nightwatch = path.normalize(__dirname + '/../node_modules/.bin/ni
 // ensure tmp dir
 fs.existsSync(settings.paths.tmp) || fs.mkdirSync(settings.paths.tmp);
 fs.existsSync(settings.paths.logs) || fs.mkdirSync(settings.paths.logs);
+// preload previous running states
+fs.readJsonPromise(settings.rootdir + '.whitewalker.json')
+	.success(function(data){ runningTests = data;})
+;
 // load and watch the nightwatch config
 nightwatchConfig =  require('../libs/nightwatch-json-parser.js')
 	.parse(settings.rootdir + 'nightwatch.json')
@@ -159,6 +163,7 @@ app
 				res.end(JSON.stringify(test));
 			}
 			, end = function(){
+				fs.writeJsonPromise(settings.rootdir + '.whitewalker.json', runningTests);
 				delete runningTestsPromise[testName];
 				next();
 			}
