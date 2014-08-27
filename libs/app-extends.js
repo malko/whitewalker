@@ -1,4 +1,4 @@
-module.exports.extends = function(app){
+module.exports.extend = function(app){
 	app.on = function (path, middleware){
 		this.use(function(req, res, next){
 			var params = req.originalUrl.match('^' + path + '$');

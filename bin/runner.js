@@ -1,15 +1,12 @@
 /*jshint node:true, strict:false, laxcomma:true, laxbreak:true */
 var connect = require('connect')
 	, http = require('http')
-	, fs = require('fs')
 	, path = require('path')
 	, childProcess = require('child_process')
-	, app = require('../libs/app-extends.js').extends(connect())
+	, fs = require('../libs/fs-promised.js')
+	, app = require('../libs/app-extends.js').extend(connect())
 	, stpl = require('../public/stpl.min.js').stpl
 	, D = require('d.js')
-	, dirPromise = D.nodeCapsule(fs, fs.readdir)
-	, readPromise = D.nodeCapsule(fs, fs.readFile)
-	, writePromise = D.nodeCapsule(fs, fs.writeFile)
 	, execPromise = D.nodeCapsule(childProcess, childProcess.exec)
 	, templatesDir = path.normalize(__dirname + '/../templates/')
 	, extExp = /\.([^.]+)$/
@@ -18,7 +15,7 @@ var connect = require('connect')
 	, runningTestsPromise = {}
 	, settings = {
 		port: 3000
-		, rootdir: process.cwd()
+		, rootdir: path.normalize(process.cwd() + '/')
 		, paths:{}
 	}
 ;
@@ -84,14 +81,14 @@ function prepareTmpTest(testName){
 			required.push([key, test[key]]);
 		}
 	});
-	return readPromise(testFilename, 'utf8')
+	return fs.readFilePromise(testFilename, 'utf8')
 		.success(function(test){ // replace named steps with requires
 			required.forEach(function(patterns){
 				test = test.replace(new RegExp('(["\'])?' + patterns[0] + '\\1\\s*:\\s*(["\'])' + patterns[1] + '\\2', 'g'), function(){
 					return '"' + patterns[0] + '": require("../steps/' + patterns[1] + '.js")';
 				});
 			});
-			return writePromise(settings.paths.tmp + testName + '.js', test, 'utf8');
+			return fs.writeFilePromise(settings.paths.tmp + testName + '.js', test, 'utf8');
 		})
 	;
 }
@@ -103,7 +100,7 @@ fs.readdirSync(templatesDir).forEach(function(tpl){
 
 // get the list of all tests files, prepare it as a template and return a promise
 function renderTestList(){
-	return dirPromise('tests')
+	return fs.readdirPromise('tests')
 		.success(function(tests){
 			var data = {
 				tests: tests.sort().map(function(item){
