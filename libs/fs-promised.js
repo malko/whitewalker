@@ -6,7 +6,7 @@ var fs = require('fs')
 	).split(',')
 ;
 methods.forEach(function(m){
-	fs[m + 'promise'] = D.nodeCapsule(fs, fs[m]);
+	fs[m + 'Promise'] = D.nodeCapsule(fs, fs[m]);
 });
 
 fs.readJsonPromise = function readJsonPromise(filename, options){
