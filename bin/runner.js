@@ -7,6 +7,8 @@ var connect = require('connect')
 	, app = require('../libs/app-extends.js').extend(connect())
 	, stpl = require('../public/stpl.min.js').stpl
 	, D = require('d.js')
+	, server = http.createServer(app)
+	, socketio = require('socket.io')(server)
 	, execPromise = D.nodeCapsule(childProcess, childProcess.exec)
 	, templatesDir = path.normalize(__dirname + '/../templates/')
 	, extExp = /\.([^.]+)$/
@@ -45,7 +47,7 @@ process.argv.forEach(function(arg, id){
 			break;
 		case "-t":
 		case "--testdir":
-			settings.rootdir = argValue.match(/^\//) ? argValue : path.normalize(process.cwd() + '/' + argValue);
+			settings.rootdir = argValue.match(/^\//) ? argValue : path.normalize(process.cwd() + '/' + argValue + '/');
 			break;
 	}
 });
@@ -66,10 +68,13 @@ fs.existsSync(settings.paths.logs) || fs.mkdirSync(settings.paths.logs);
 fs.readJsonPromise(settings.rootdir + '.whitewalker.json')
 	.success(function(data){ runningTests = data;})
 ;
+
 // load and watch the nightwatch config
 nightwatchConfig =  require('../libs/nightwatch-json-parser.js')
 	.parse(settings.rootdir + 'nightwatch.json')
-	.watch()
+	.watch(function(){ // tell connected clients about the new env
+		socketio.emit('setEnvs', nightwatchConfig.getEnvs());
+	})
 ;
 
 // utils
@@ -129,7 +134,7 @@ function renderTestList(){
 					};
 				})
 			};
-			return stpl('tests',data);
+			return data;
 		})
 	;
 }
@@ -137,14 +142,31 @@ function renderTestList(){
 // return the index file with list of available tests
 app
 	.on('/', function(req, res, next){
-		renderTestList()
-			.success(function(body){
-				res.end(stpl('index', {body:body}));
-			})
-			.ensure(next)
+		// renderTestList()
+		// 	.success(function(body){
+				res.end(stpl('index', {body:''}));
+				next();
+			// })
+			// .ensure(next)
 		;
 	})
-	.on('^/run/([a-zA-Z0-9_-]+)$', function(req, res, next, testName){
+	.on('/tests/?', function(req, res, next, testName){
+		noCache(res);
+		res.end(JSON.stringify(runningTests));
+		next();
+	})
+	.on('/tests/([a-zA-Z0-9_-]+])/', function(req, res, next, testName){
+		console.log('TEST', testName)
+		noCache(res);
+		if (testName in runningTests) {
+			res.end(JSON.stringify(runningTests[testName]));
+		} else {
+			res.writeHead(404);
+			res.end();
+		}
+		next();
+	})
+	.on('/run/([a-zA-Z0-9_-]+)', function(req, res, next, testName){
 		testName = cleanName(testName);
 		var testSucceed = function(result){
 				var test = runningTests[testName];
@@ -199,4 +221,13 @@ app
 	.use(connect.static(__dirname + '/../node_modules/d.js/lib/'))
 ;
 
-http.createServer(app).listen(settings.port);
+socketio.on('connection', function(socket){
+	console.log('a user connected to socketio');
+	socket.emit('setEnvs', nightwatchConfig.getEnvs());
+	socket.emit('setTests', runningTests);
+
+});
+server.listen(settings.port, function(){
+	console.log("Walking at http://127.0.0.1:%s", settings.port);
+
+});
