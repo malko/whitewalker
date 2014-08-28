@@ -78,6 +78,12 @@ nightwatchConfig =  require('../libs/nightwatch-json-parser.js')
 ;
 
 // utils
+function noCache(res){
+	res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+	res.setHeader('Expires', '-1');
+	res.setHeader('Pragma', 'no-cache');
+	return res;
+}
 function removeExt(fname){
 	return fname.replace(extExp,'');
 }
