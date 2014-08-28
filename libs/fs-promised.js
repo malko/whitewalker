@@ -1,3 +1,5 @@
+/*jshint laxbreak:true*/
+"use strict";
 var fs = require('fs')
 	, D = require('d.js')
 	, methods = (
@@ -9,30 +11,22 @@ methods.forEach(function(m){
 	fs[m + 'Promise'] = D.nodeCapsule(fs, fs[m]);
 });
 
-fs.readJsonSync = function readJsonSync(filename, options, callback){
-	return fs.readFileSync(filename, options, function(err, data){
-		if( !err ){
-			try{
-				data = JSON.parse(data);
-			}catch(e){
-				return callback(e);
-			}
-			callback(err,data);
-		}
-		callback(err, data);
-	});
+fs.readJsonSync = function readJsonSync(filename, options){
+	if( options && !options.encoding ){
+		options.encoding='utf8';
+	}
+	var data = fs.readFileSync(filename, options || 'utf8');
+	return JSON.parse(data);
 };
 fs.readJsonPromise = function readJsonPromise(filename, options){
 	return fs.readFilePromise(filename, options).success(JSON.parse);
 };
-fs.writeJsonSync = function writeJsonSync(filename, data, options, callback){
-	try{
-		data = JSON.stringify(data);
-	}catch(e){
-		callback(e);
-		return;
+fs.writeJsonSync = function writeJsonSync(filename, data, options){
+	data = JSON.stringify(data, options && options.space || '\t');
+	if( options && !options.encoding ){
+		options.encoding='utf8';
 	}
-	return fs.writeFileSync(filename, data, options, callback);
+	return fs.writeFileSync(filename, data, options || 'utf8');
 };
 fs.writeJsonPromise = function writeJsonPromise(filename, data, options){
 	return fs.writeFilePromise(filename, JSON.stringify(data), options);
