@@ -1,1 +1,1 @@
-<ul>{{#tests}}{{>test}}{{/tests}}</ul>
+<dl>{{#tests as test}}{{>test}}{{/tests}}</dl>

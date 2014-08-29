@@ -1,10 +1,14 @@
 
-	<li id="{{name}}" class="status-{{status}}">
+	<dt id="{{test.name}}" class="status-{{test.status}}">
 		<div>
-			<span class="name">{{name}}</span>
-			<span class="datetime">last run at: {{status|!=running?}}{{endTime}}{{?status}}{{status|=running?}}{{startTime}}{{?status}}</span>
-			<span class="duration">in {{duration}}</span>
-			<button type="buttton" class="testrunner" rel="{{name}}">run test</button>
+			<span class="name">{{test.name}}</span>
+			<span class="datetime">last run at:
+			{{test.status|!=running?}}{{test.endTime}}{{?test.status}}
+			{{test.status|=running?}}{{test.startTime}} (start at){{?test.status}}</span>
+			<span class="duration">in {{test.duration}}</span>
+			<div class="actions">{{>test-run-buttons}}</div>
 		</div>
-		<pre>{{out}}</pre>
-	</li>
+	</dt>
+	<dd id="{{test.name}}-dd">
+		<pre>{{test.out}}</pre>
+	</dd>

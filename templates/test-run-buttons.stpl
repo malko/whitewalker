@@ -1,0 +1,6 @@
+{{envs?}}{{#envs as env}}
+<button type="buttton" class="testrunner" rel="{{test.name}}/{{env.name}}">{{env.name}}</button>
+{{/envs}}{{?envs}}
+{{envs!?}}
+<button type="buttton" class="testrunner" rel="{{test.name}}">run</button>
+{{?envs}}
