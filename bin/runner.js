@@ -172,8 +172,9 @@ app
 		}
 		next();
 	})
-	.on('/run/([a-zA-Z0-9_-]+)', function(req, res, next, testName){
+	.on('/run/([a-zA-Z0-9_-]+)(?:/([a-zA-Z0-9_-]+))?', function(req, res, next, testName, environment){
 		testName = cleanName(testName);
+		environment = environment ? cleanName(environment) : 'default';
 		var testSucceed = function(result){
 				var test = runningTests[testName];
 				test.endTime = new Date();
@@ -214,7 +215,7 @@ app
 		};
 		runningTestsPromise[testName] = prepareTmpTest(testName)
 			.success(function(){
-				return execPromise(settings.paths.nightwatch + ' -e chrome -c ./nightwatch.json -t ./tmp/' + testName + '.js');
+				return execPromise(settings.paths.nightwatch + ' -e ' + environment + ' -c ./nightwatch.json -t ./tmp/' + testName + '.js');
 			})
 			.success(testSucceed)
 			.error(testFailed)

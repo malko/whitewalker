@@ -53,9 +53,10 @@
 		$('body').on('click', 'button.testrunner', function(){
 			var button = $(this)
 				, testName = button.attr('rel')
-				, parent = $('#'+testName+', #'+testName+'-dd')
+				, parent = button.closest('dt')
 				, testStatusPromise = $.getJSONPromise('/run/'+testName)
 			;
+			parent = parent.add(parent.next('dd'))
 			button.attr('disabled', 'disabled');
 			parent
 				.removeClass('status-unknown status-failed status-ok')
@@ -67,8 +68,8 @@
 					button.attr('disabled', '');
 				})
 				.success(function(res){
-					res.envs = envs;
-					parent.replaceWith(stpl('test', res));
+					$(stpl('test', {test:res, envs:envs})).insertBefore(parent[0]);
+					parent.remove();
 				})
 				.error(function(error){
 					parent.addClass('status-failed');
