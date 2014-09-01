@@ -21,15 +21,45 @@ fs.readJsonSync = function readJsonSync(filename, options){
 fs.readJsonPromise = function readJsonPromise(filename, options){
 	return fs.readFilePromise(filename, options).success(JSON.parse);
 };
+
+function stringify(data, options){
+	var replacer = options && options.replacer || null
+		, space = options && options.space || '\t'
+	;
+	return JSON.stringify(data, replacer, space);
+}
 fs.writeJsonSync = function writeJsonSync(filename, data, options){
-	data = JSON.stringify(data, options && options.space || '\t');
 	if( options && !options.encoding ){
 		options.encoding='utf8';
 	}
-	return fs.writeFileSync(filename, data, options || 'utf8');
+	return fs.writeFileSync(filename, stringify(data, options), options || 'utf8');
 };
 fs.writeJsonPromise = function writeJsonPromise(filename, data, options){
-	return fs.writeFilePromise(filename, JSON.stringify(data), options);
+	return fs.writeFilePromise(filename, stringify(data, options), options);
 };
+
+/**
+* workaround duplicates watch events. options can take a ttl property to modify the default 100ms of ttl for last event.
+*/
+fs.watchDeduped = function(filename, options, listener){
+	if ((! listener) && options instanceof Function) {
+		listener = options;
+		options = undefined;
+	}
+	var ttl = options && options.ttl || 100
+		 , lasttimes = {}
+	;
+	return fs.watch(filename, options ||  {}, function(eventName, fileName){
+		var now = (new Date()).getTime()
+			, lasttime = lasttimes[eventName + ':' + fileName] || 0
+		;
+		if( now < (lasttime + ttl) ){
+			return;
+		}
+		lasttimes[eventName + ':' + fileName] = now;
+		listener(eventName, fileName);
+	})
+
+}
 
 module.exports = fs;

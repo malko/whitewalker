@@ -9,5 +9,8 @@
     "d.js": "^0.6.0",
     "nightwatch": "^0.5.18",
     "socket.io": "^1.0.6"
+  },
+  "devDependencies": {
+    "stylus": "^0.48.1"
   }
 }
