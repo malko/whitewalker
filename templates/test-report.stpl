@@ -1,0 +1,12 @@
+<div id="{{test.name}}-report-{{envtest.name}}" class="report status-{{envtest.status}}{{opened?}} open{{?opened}}">
+	<span class="name">{{envtest.name}}</span>
+	<span class="datetime">
+		{{envtest.status|!=running?}}last run at {{envtest.endTime}}{{?envtest.status}}
+		{{envtest.status|=running?}}started at {{envtest.startTime}}{{?envtest.status}}
+	</span>
+	<span class="duration">
+		{{envtest.status|!=running?}}in {{envtest.duration}}s {{?envtest.status}}
+		{{envtest.status|=running?}}running{{?envtest.status}}
+	</span>
+	<pre><xmp>{{envtest.out}}</xmp></pre>
+</div>

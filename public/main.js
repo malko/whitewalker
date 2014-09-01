@@ -5,19 +5,13 @@
 */
 ;(function(){
 	"use strict";
-	var socket = io(), envs = null, tests = null, initialDataDefer = D();
-	socket.on('setEnvs', function(data){
-		envs = data;
-		tests && initialDataDefer.resolve();
-	});
-	socket.on('setTests', function(data){
-		tests = data;
-		envs && initialDataDefer.resolve();
-	});
-	socket.on('setTest', function(data){
-		console.log("setTest", data);
-	})
-	// extend basic-compat with getPromise and getJSONPromise methods
+	var socket = io()
+		, envs = null
+		, tests = null
+		, initialDataPromises = []
+		, opened = {}
+	;
+
 	$.getPromise = function(){
 		var d = D();
 		$.get.apply($,arguments).done(d.resolve).fail(d.reject);
@@ -28,55 +22,84 @@
 		$.getJSON.apply($,arguments).done(d.resolve).fail(d.reject);
 		return d.promise;
 	};
-	// add basic replace elmt method
-	// $.fn.replace = function(elmt){
-	// 	var self = this;
-	// 	elmt.nodeType && (elmt = $(elmt));
-	// 	return $.each(elmt,function(){
-	// 		this.parentNode.insertBefore(self[0] || self, this);
-	// 		this.parentNode && this.parentNode.removeChild(this);
-	// 	});
-	// };
+
+	$.fn.stpl = function(tplName, data, replace){
+		var res = this;
+		if ( ! replace ) {
+			this.html(stpl(tplName, data));
+		} else {
+			res = $(stpl(tplName, data)).insertAfter(this);
+			this.remove();
+		}
+		return res;
+	};
+
 
 	// get and register required stpl templates
-	$.each(['tests','test','test-run-buttons'],function(id, tplName){
-		$.getPromise(tplName + '.stpl').success(function(tplStr){ stpl.registerString(tplName,tplStr); });
-	})
+	$.each(['tests', 'test', 'test-run-buttons', 'test-report'], function(id, tplName){
+		initialDataPromises.push($.getPromise(tplName + '.stpl')
+			.success(function(tplStr){ stpl.registerString(tplName,tplStr); })
+		);
+	});
+	// load initial tests data
+	initialDataPromises.push($.getJSONPromise('/tests').success(function(data){ tests = data;}));
 
 	// on ready document bind events
 	$(function(){
-		initialDataDefer.promise
-			.success(function(){
-				$(stpl('tests', {tests:tests, envs:envs})).insertAfter('h1');
-			})
-		;
-		$('body').on('click', 'button.testrunner', function(){
-			var button = $(this)
-				, testName = button.attr('rel')
-				, parent = button.closest('dt')
-				, testStatusPromise = $.getJSONPromise('/run/'+testName)
-			;
-			parent = parent.add(parent.next('dd'))
-			button.attr('disabled', 'disabled');
-			parent
-				.removeClass('status-unknown status-failed status-ok')
-				.addClass('status-running')
-			;
-			testStatusPromise
-				.ensure(function(){
-					parent.removeClass('status-running');
-					button.attr('disabled', '');
-				})
-				.success(function(res){
-					$(stpl('test', {test:res, envs:envs})).insertBefore(parent[0]);
-					parent.remove();
-				})
-				.error(function(error){
-					parent.addClass('status-failed');
-					console && console.log(error);
-					parent.attr('title', error);
-				})
+
+		socket.on('updated', function(){
+			window.location.reload();
+		});
+		socket.on('setTest', function(testName, environment, test){
+			var data = {test:{name:testName}, envtest: test, opened: !!opened[testName + '-report-' + environment]};
+			console.log(testName, environment, data.opened, opened)
+			$('#' + testName + '-report-' + environment).stpl('test-report', data, true);
+			$('#' + testName +' button[rel="' + testName + '/' + environment + '"]')
+				.removeClass('status-unknown status-ok status-failed status-running')
+				.addClass('status-' + test.status)
 			;
 		});
+		socket.on('livereload', function(){
+			try{
+			$('link[href*=css]').each(function(k, link){
+				link = $(link)
+				link.detach();
+				link.attr('href',link.attr('href').replace(/(\?\d*|$)/, '?' + (new Date()).getTime()));
+				link.appendTo('head');
+				console.log(link.href)
+			});
+		}catch(e){ console.log(e)}
+		})
+
+		D.all(initialDataPromises)
+			.success(function(){
+				$('#wwTestsContainer').html(stpl('tests', {tests:tests, envs:envs}));
+			})
+			.rethrow();
+		;
+
+		$('#wwUpdate').click(function(){ $.get('/update'); $(this).prop('disabled',true);});
+
+		$('body')
+			.on('click', 'button.testrunner', function(){
+				var button = $(this)
+					, testName = button.attr('rel')
+					, parent = button.closest('dt')
+					, dd = parent.next('dd')
+					, testStatusPromise = $.getJSONPromise('/run/'+testName)
+				;
+				button.prop('disabled',true);
+				testStatusPromise
+					.ensure(function(){
+						console.log('enabling again')
+						button.prop('disabled', false);
+					})
+					.rethrow()
+				;
+			})
+			.on('click', 'dd > div', function(){
+				$(this).toggleClass('open', opened[this.id] = !opened[this.id]);
+			})
+		;
 	});
 })();

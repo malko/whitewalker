@@ -1,5 +1,13 @@
-$border-radius=.3em;
-$fg=#333;
+$darkgrey = #333;
+$grey = #777;
+$lightgrey = #bbb;
+$darkblue = #000111;
+$lightblue = #428bca;
+$orange = #ff7f2b;
+$maroon = #502d17;
+$white = #fff;
+
+$fg=$darkgrey;
 
 @css{
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
@@ -7,90 +15,114 @@ $fg=#333;
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 }
 
+$border-radius{ border-radius:.3em;}
+$statusSymbol{
+	&:before{
+		display:inline-block;
+		font-size:1.25em;
+		line-height:1em;
+		vertical-align:middle;
+		margin-right:.25em;
+	}
+	&.status-unknown:before{
+		color: $darkgrey;
+		content:"?";
+	}
+	&.status-ok:before{
+		color: #080;
+		content:"\2714";
+	}
+	&.status-running:before{
+		color:#008;
+		content:"↻";
+
+		-webkit-animation:spin 2s linear infinite;
+		-moz-animation:spin 2s linear infinite;
+		animation:spin 2s linear infinite;
+	}
+	&.status-failed:before{
+		color:#800;
+		content:"✗";
+	}
+}
+
 body{
 	font-size:.675em;
 	font-family:Sans Serif;
-	color:#333;
+	color:$fg;
+	background:$lightgrey;
+	margin:0;
 }
 
-ul{
-	list-style-type:none;
-	padding:0;
-	display:flex;
-	flex-direction:column;
-	//border-spacing: 0 .1em;
-	//background:#888;
-	width: 80%;
-	margin:auto;
-	//border:solid $fg 1px;
-}
-
-li > div{
-	font-size:1.1rem;
-	flex:1;
-	display:flex;
-	flex-direction:row;
-	border:solid $fg 1px;
-	margin-bottom:.1em;
-	border-radius:$border-radius;
-	padding:.2em .4em;
-
-}
-li[class*=status] > div:before{
-	display:inline-block;
-	font-size:1.25rem;
-	width:1em;
-	height:1em;
-	line-height:1em;
-	margin-top:.33em;
-}
-li.status-unknown > div, li.status-unknown > pre{ background:#fafafa; }
-li.status-ok > div, li.status-ok> pre{ background:#dfd; }
-li.status-ok > div:before{
-	color: #080;
-	content:"\2714";
-}
-li.status-running > div, li.status-running > pre{ background:#ddf; }
-li.status-running > div:before{
-	color:#008;
-	content:"↻";
-
-	-webkit-animation:spin 2s linear infinite;
-	-moz-animation:spin 2s linear infinite;
-	animation:spin 2s linear infinite;
-}
-li.status-failed > div, li.status-failed > pre{ background:#fdd; }
-li.status-failed > div:before{
-	color:#800;
-	content:"✗";
-}
-
-pre{
-	border:solid #333 1px;
-	border-top:none;
-	background:#eee;
-	width:98%;
-	margin:-.15em auto 1em auto;
-	position:relative;
-	top:-1px;
-	border-bottom-right-radius:$border-radius*2;
-	border-bottom-left-radius:$border-radius*2;
-	max-height:200px;
-	overflow:auto;
-	padding:.4em .8em;
-}
-
-
-li > div > span{
-	padding:.2em .8em;
-	line-height:1.5rem
-	display:inline-block;
-	vertical-align:middle;
-	&.name{
-		flex:1;
+header{
+	background:$darkblue;
+	color: $white;
+	position: relative;
+	h1{
+		margin:0;
+		padding:1em;
 	}
-	&.datetime, &.duration{
-		font-size:.8rem;
+}
+
+#wwUpdate{
+	position: absolute;
+	top:1.75em;
+	right:1em;
+}
+
+dl{
+	margin:auto;
+	width:90%;
+	padding:1em;
+	background:$darkgrey;
+}
+dt{
+	background:$white;
+	@extend $border-radius;
+	position:relative;
+	/*line-height:3em;*/
+	padding:1em;
+	.name{
+		font-weight:bold;
+		font-size:1.1em;
+	}
+	.actions{
+		position:absolute;
+		right:1em;
+		top:.75em;
+		button{
+			@extend $statusSymbol;
+		}
+	}
+}
+dd{
+	background:$white;
+	width:95%;
+	margin:0 auto 1em auto;
+	padding:1em;
+	overflow:auto;
+	max-height:350px;
+	@extend $border-radius;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	div.report {
+		padding:1em;
+		margin:0 0 .5em 0;
+		border-style:solid;
+		border-width:1px;
+		@extend $border-radius;
+		@extend $statusSymbol;
+		.name{
+			font-weight:bold;
+		}
+		&.open{
+			pre{
+				display:block;
+			}
+		}
+		pre{
+			display:none;
+		}
 	}
 }
 
@@ -102,14 +134,40 @@ button{
 	background:#ddd;
 }
 button:hover{
-	background:#eee;
+	opacity:.7;
 }
 button:focus{
-	background:#eee;
 	outline:none;
-	box-shadow: 1px 1px 1px #A83;
+	box-shadow: 0px 0px 3px $orange;
 }
 button:active{
 	background:#eee;
 	box-shadow:none;
+}
+
+
+.status-unknown{
+	background-color:$white;
+	border-color:$darkgrey !important;
+	color:$darkgrey;
+}
+.status-warning{
+	background-color:#ffb;
+	border-color:#fb4 !important;
+	color:#950;
+}
+.status-failed{
+	background-color:#fffafa;
+	border-color:#b44 !important;
+	color:#922;
+}
+.status-ok{
+	background-color:#fafffa;
+	border-color:#4b4 !important;
+	color:#292;
+}
+.status-running{
+	background-color:#fafaff;
+	border-color:#33f !important;
+	color:#229;
 }

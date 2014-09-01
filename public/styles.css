@@ -1,22 +1,150 @@
+
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-body{font-size:.675em;font-family:Sans Serif;color:#333}
-ul{list-style-type:none;padding:0;display:flex;flex-direction:column;width:80%;margin:auto}
-li > div{font-size:1.1rem;flex:1;display:flex;flex-direction:row;border:solid #333 1px;margin-bottom:.1em;border-radius:.3em;padding:.2em .4em}
-li[class*=status] > div:before{display:inline-block;font-size:1.25rem; width:1em; height:1em; line-height:1em; margin-top:.33em}
-li.status-unknown > div,li.status-unknown > pre{background:#fafafa}
-li.status-ok > div,li.status-ok> pre{background:#dfd}
-li.status-ok > div:before{color:#080;content:"\2714"}
-li.status-running > div,li.status-running > pre{background:#ddf}
-li.status-running > div:before{color:#008;content:"↻";-webkit-animation:spin 2s linear infinite;-moz-animation:spin 2s linear infinite;animation:spin 2s linear infinite}
-li.status-failed > div,li.status-failed > pre{background:#fdd}
-li.status-failed > div:before{color:#800;content:"✗"}
-pre{border:solid #333 1px;border-top:none;background:#eee;width:98%;margin:-.15em auto 1em auto;position:relative;top:-1px;border-bottom-right-radius:.6em;border-bottom-left-radius:.6em;max-height:200px;overflow:auto;padding:.4em .8em}
-li > div > span{padding:.2em .8em;line-height:1.5rem;display:inline-block;vertical-align:middle;}
-li > div > span.name{flex:1}
-li > div > span.datetime,li > div > span.duration{font-size:.8rem}
-button{border:1px solid #333;border-radius:.2em;box-shadow:1px 1px 1px #333;color:#333;background:#ddd}
-button:hover{background:#eee}
-button:focus{background:#eee;outline:none;box-shadow:1px 1px 1px #a83}
-button:active{background:#eee;box-shadow:none}
+dt,
+dd,
+dd div.report {
+  border-radius: 0.3em;
+}
+dt .actions button:before,
+dd div.report:before {
+  display: inline-block;
+  font-size: 1.25em;
+  line-height: 1em;
+  vertical-align: middle;
+  margin-right: 0.25em;
+}
+dt .actions button.status-unknown:before,
+dd div.report.status-unknown:before {
+  color: #333;
+  content: "?";
+}
+dt .actions button.status-ok:before,
+dd div.report.status-ok:before {
+  color: #080;
+  content: "\2714";
+}
+dt .actions button.status-running:before,
+dd div.report.status-running:before {
+  color: #008;
+  content: "↻";
+  -webkit-animation: spin 2s linear infinite;
+  -moz-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+dt .actions button.status-failed:before,
+dd div.report.status-failed:before {
+  color: #800;
+  content: "✗";
+}
+body {
+  font-size: 0.675em;
+  font-family: Sans Serif;
+  color: #333;
+  background: #bbb;
+  margin: 0;
+}
+header {
+  background: #000111;
+  color: #fff;
+  position: relative;
+}
+header h1 {
+  margin: 0;
+  padding: 1em;
+}
+#wwUpdate {
+  position: absolute;
+  top: 1.75em;
+  right: 1em;
+}
+dl {
+  margin: auto;
+  width: 90%;
+  padding: 1em;
+  background: #333;
+}
+dt {
+  background: #fff;
+  position: relative;
+/*line-height:3em;*/
+  padding: 1em;
+}
+dt .name {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+dt .actions {
+  position: absolute;
+  right: 1em;
+  top: 0.75em;
+}
+dd {
+  background: #fff;
+  width: 95%;
+  margin: 0 auto 1em auto;
+  padding: 1em;
+  overflow: auto;
+  max-height: 350px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+dd div.report {
+  padding: 1em;
+  margin: 0 0 0.5em 0;
+  border-style: solid;
+  border-width: 1px;
+}
+dd div.report .name {
+  font-weight: bold;
+}
+dd div.report.open pre {
+  display: block;
+}
+dd div.report pre {
+  display: none;
+}
+button {
+  border: 1px solid #333;
+  border-radius: 0.2em;
+  box-shadow: 1px 1px 1px #333;
+  color: #333;
+  background: #ddd;
+}
+button:hover {
+  opacity: 0.7;
+}
+button:focus {
+  outline: none;
+  box-shadow: 0px 0px 3px #ff7f2b;
+}
+button:active {
+  background: #eee;
+  box-shadow: none;
+}
+.status-unknown {
+  background-color: #fff;
+  border-color: #333 !important;
+  color: #333;
+}
+.status-warning {
+  background-color: #ffb;
+  border-color: #fb4 !important;
+  color: #950;
+}
+.status-failed {
+  background-color: #fffafa;
+  border-color: #b44 !important;
+  color: #922;
+}
+.status-ok {
+  background-color: #fafffa;
+  border-color: #4b4 !important;
+  color: #292;
+}
+.status-running {
+  background-color: #fafaff;
+  border-color: #33f !important;
+  color: #229;
+}

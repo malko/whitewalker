@@ -1,6 +1,4 @@
-{{envs?}}{{#envs as env}}
-<button type="buttton" class="testrunner" rel="{{test.name}}/{{env.name}}">{{env.name}}</button>
-{{/envs}}{{?envs}}
-{{envs!?}}
-<button type="buttton" class="testrunner" rel="{{test.name}}">run</button>
-{{?envs}}
+{{test.tests?}}{{#test.tests as envtest}}
+<button type="buttton" class="testrunner status-{{envtest.status}}" rel="{{test.name}}/{{envtest.name}}">{{envtest.name}}</button>
+{{/test.tests}}{{?test.tests}}
+<button type="buttton" class="testrunner" rel="{{test.name}}">all</button>
