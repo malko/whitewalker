@@ -86,13 +86,21 @@ function updateList(noCache){
 }
 
 module.exports = {
-	cache: cache
+	_observers:[]
+	, cache: cache
 	, setCachePath: function(dirPath){
 		cachePath = path.normalize(dirPath + '/');
 		fs.existsSync(cachePath) || fs.mkdirSync(cachePath);
 		return this;
 	}
 	, load: updateList
+	, registerObserver: function(observer){
+		this._observers.push(observer);
+	}
+	, unregisterObserver: function(observer){
+		var id = this._observers.indexOf(observer);
+		(~id) && this._observers.splice(id,1);
+	}
 	, update: function(){ return updateList(true);}
 	, reset: function(){
 		for(var test in cache){
@@ -104,9 +112,14 @@ module.exports = {
 		environments = envs;
 		return this;
 	}
+	, getEnvs: function(){ return environments; }
 	, setTestResult: function(testName, environment, testData){
-		cache[testName].tests[environment] = testData;
-		writeTestToCache(testName);
+		var tests = cache[testName].tests;
+		tests[environment] = testData || initTestEnvObj(environment, true);
+		this._observers.forEach(function(observer){
+			observer.emit && observer.emit('setTest', testName, environment, tests[environment]);
+		});
+		tests[environment].status.match(/failed|ok/) && writeTestToCache(testName);
 	}
 	, initEnvTest: function(env){ return initTestEnvObj(env, true);}
 
