@@ -4,7 +4,8 @@ var path = require('path')
 		port: 3000
 		, rootdir: path.normalize(process.cwd() + '/')
 		, paths:{}
-		, livereload:false
+		, livereload: false
+		, startSelenium: false
 	}
 ;
 // arguments parsing
@@ -22,6 +23,14 @@ process.argv.forEach(function(arg, id){
 				, '	launch whitewalker on custom port 8000 in "myTests" directory with short and long options'
 				, '		$ whitewalker -p 8000 -t /mytests'
 				, '		$ whitewalker --port 8000 --testdir /mytests'
+				, ''
+				, 'Options (all are optionals):'
+				, '-p, --port		port to bind whitewalker server to'
+				, '-t, --testdir	path to root test dir containing the nightwatch.json config file'
+				, ''
+				, 'Flags (all are optionals)'
+				, '--livereload		livereload for stylus file'
+				, '-s,-selenium		start a selenium standalone server automaticly'
 			].join('\n'));
 			process.exit(0);
 			break;
@@ -35,6 +44,10 @@ process.argv.forEach(function(arg, id){
 			break;
 		case "--livereload":
 			settings.livereload = true;
+			break;
+		case "-s":
+		case "--selenium":
+			settings.startSelenium = true;
 			break;
 	}
 });

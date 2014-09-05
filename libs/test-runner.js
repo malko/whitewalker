@@ -8,12 +8,6 @@ var D = require('d.js')
 function cleanName(name){
 	return name.replace(cleanExp,'');
 }
-// function objValues(obj){
-// 	var values=[], k;
-// 	for( k in obj){ values.push(obj[k]); }
-// 	return values;
-// }
-
 function execTestPromise(nightwatchbin, testList, testFilename, testName, env){
 	testName = cleanName(testName);
 	env === 'all' && (env = null);

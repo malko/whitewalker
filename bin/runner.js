@@ -2,6 +2,7 @@
 var connect = require('connect')
 	, http = require('http')
 	, fs = require('../libs/fs-promised.js')
+	, path = require('path')
 	, app = require('../libs/app-extends.js').extend(connect())
 	, D = require('d.js')
 	, childProcess = require('child_process')
@@ -16,10 +17,12 @@ var connect = require('connect')
 	, testRunner = require('../libs/test-runner.js')(settings, testList, testPreparator)
 	// , runningTestsPromise = {}
 	, updatePromise = null
+	, selenium = require('../libs/selenium-launcher.js')
 ;
 
 // utils
 function ensureDir(path){
+	console.log('Ensuring %s exists', path);
 	fs.existsSync(path) || fs.mkdirSync(path);
 }
 function noCache(res){
@@ -28,15 +31,14 @@ function noCache(res){
 	res.setHeader('Pragma', 'no-cache');
 	return res;
 }
-// function cleanName(name){
-// 	return name.replace(cleanExp,'');
-// }
 function setEnvs(){
 	// tell connected clients about the new env
 	//socketio.emit('setEnvs', nightwatchConfig.getEnvs());
 	testList.setEnvs(nightwatchConfig.getEnvs(true));
+	nightwatchConfig.getEnvs().forEach(function(env){
+		env.screenshotsPath && ensureDir(path.normalize(settings.rootdir + env.screenshotsPath));
+	});
 }
-
 
 // set working dir
 process.chdir(settings.rootdir);
@@ -49,13 +51,23 @@ ensureDir(settings.rootdir + 'screenshots');
 // load and watch the nightwatch config
 nightwatchConfig =  require('../libs/nightwatch-json-parser.js')
 	.parse(settings.rootdir + 'nightwatch.json')
-	.watch(function(){ setEnvs(); })
+	.watch(function(){
+		setEnvs();
+	})
 ;
 setEnvs();
 
 // load test data
 testList.setCachePath('.whitewalker/').load();
 testList.registerObserver(socketio);
+
+// check for selenium autostart
+if(settings.startSelenium && nightwatchConfig.config.selenium){
+	settings.startSelenium && selenium.configure(nightwatchConfig.config.selenium).start();
+} else {
+	console.log("won't manage selenium server");
+}
+
 
 // return the index file with list of available tests
 app
