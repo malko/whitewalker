@@ -53,7 +53,9 @@ NightwatchParser.prototype.stopWatching = function nightwatchparser_stopwatching
 	return this;
 };
 NightwatchParser.prototype.getEnvs = function nightwatchparser_getenvs(nameOnly){
-	var settings = this.config.test_settings, envs = Object.keys(this.config.test_settings);
+	var settings = this.config.test_settings, envs = Object.keys(this.config.test_settings).filter(function(a){
+		return !!settings[a].desiredCapabilities;
+	});
 	return nameOnly ? envs : envs.map(function(envname){
 		var envSettings = settings[envname]
 			, env = {name: envname}

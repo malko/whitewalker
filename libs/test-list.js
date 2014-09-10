@@ -94,6 +94,7 @@ module.exports = {
 		return this;
 	}
 	, load: updateList
+	, getList: function(){ return Object.keys(cache); }
 	, registerObserver: function(observer){
 		this._observers.push(observer);
 	}

@@ -33,11 +33,12 @@ module.exports = {
 						return '"' + patterns[0] + '": require("../steps/' + patterns[1] + '.js")';
 					});
 				});
-				return fs.writeFilePromise(tmpFilename, test, 'utf8');
+				return fs.writeFilePromise(tmpFilename, test, 'utf8').rethrow();
 			})
 			.success(function(){
 				return tmpFilename;
 			})
+			.rethrow()
 		;
 	}
 };
