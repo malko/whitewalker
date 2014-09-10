@@ -76,7 +76,7 @@ app
 	.on('/tests/?', function(req, res, next){
 		noCache(res);
 		res.setHeader('Content-type', 'application/json; charset=utf8');
-		res.end(JSON.stringify(testList.cache));
+		res.end(JSON.stringify({tests:testList.cache, envs:testList.getEnvs()}));
 		next();
 	})
 	/*.on('/tests/([a-zA-Z0-9_-]+])/', function(req, res, next, testName){

@@ -1,4 +1,4 @@
-/*global $, D, stpl*/
+/*global $, D, stpl, io*/
 /**
 * @author Jonathan Gotti
 * @licence MIT
@@ -17,9 +17,9 @@
 		$.get.apply($,arguments).done(d.resolve).fail(d.reject);
 		return d.promise;
 	};
-	$.getJSONPromise = function(url){
+	$.getJSONPromise = function(){
 		var d = D();
-		$.getJSON.apply($,arguments).done(d.resolve).fail(d.reject);
+		$.getJSON.apply($, arguments).done(d.resolve).fail(d.reject);
 		return d.promise;
 	};
 
@@ -42,40 +42,45 @@
 		);
 	});
 	// load initial tests data
-	initialDataPromises.push($.getJSONPromise('/tests').success(function(data){ tests = data;}));
+	initialDataPromises.push($.getJSONPromise('/tests').success(function(data){ tests = data.tests; envs = data.envs}));
 
 	// on ready document bind events
 	$(function(){
 
-		socket.on('updated', function(){
-			window.location.reload();
-		});
-		socket.on('setTest', function(testName, environment, test){
-			var data = {test:{name:testName}, envtest: test, opened: !!opened[testName + '-report-' + environment]};
-			console.log(testName, environment, data.opened, opened)
-			$('#' + testName + '-report-' + environment).stpl('test-report', data, true);
-			$('#' + testName +' button[rel="' + testName + '/' + environment + '"]')
-				.removeClass('status-unknown status-ok status-failed status-running')
-				.addClass('status-' + test.status)
-			;
-		});
-		socket.on('livereload', function(){
-			try{
-			$('link[href*=css]').each(function(k, link){
-				link = $(link)
-				link.detach();
-				link.attr('href',link.attr('href').replace(/(\?\d*|$)/, '?' + (new Date()).getTime()));
-				link.appendTo('head');
-				console.log(link.href)
-			});
-		}catch(e){ console.log(e)}
-		})
+		socket
+			.on('updated', function(){
+				window.location.reload();
+			})
+			.on('setTest', function(testName, environment, test){
+				var data = {test:{name:testName}, envtest: test, opened: !!opened[testName + '-report-' + environment]};
+				console.log(testName, environment, data.opened, opened)
+				$('#' + testName + '-report-' + environment).stpl('test-report', data, true);
+				$('#' + testName +' button[rel="' + testName + '/' + environment + '"]')
+					.removeClass('status-unknown status-ok status-failed status-running')
+					.addClass('status-' + test.status)
+				;
+			})
+			.on('livereload', function(){
+				try{
+					$('link[href*=css]').each(function(k, link){
+						link = $(link);
+						link.detach();
+						link.attr('href',link.attr('href').replace(/(\?\d*|$)/, '?' + (new Date()).getTime()));
+						link.appendTo('head');
+						console.log(link.href)
+					});
+				}catch(e){
+					console.log(e)}
+				}
+			)
+		;
 
 		D.all(initialDataPromises)
 			.success(function(){
-				$('#wwTestsContainer').html(stpl('tests', {tests:tests, envs:envs}));
+				$('#wwTestsContainer').stpl('tests', {tests:tests});
+				$('#environments').stpl('test-run-buttons', {test:{name:'all', tests:envs.map(function(a){ return {name:a}})}});
 			})
-			.rethrow();
+			.rethrow()
 		;
 
 		$('#wwUpdate').click(function(){ $.get('/update'); $(this).prop('disabled',true);});
@@ -84,8 +89,6 @@
 			.on('click', 'button.testrunner', function(){
 				var button = $(this)
 					, testName = button.attr('rel')
-					, parent = button.closest('dt')
-					, dd = parent.next('dd')
 					, testStatusPromise = $.getJSONPromise('/run/'+testName)
 				;
 				button.prop('disabled',true);
