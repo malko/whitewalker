@@ -26,11 +26,15 @@ $statusSymbol{
 	}
 	&.status-unknown:before{
 		color: $darkgrey;
-		content:"?";
+		content:"►";
 	}
 	&.status-ok:before{
 		color: #080;
 		content:"\2714";
+	}
+	&.status-queued:before{
+		color:#950;
+		content:"\26A1";
 	}
 	&.status-running:before{
 		color:#008;
@@ -42,7 +46,7 @@ $statusSymbol{
 	}
 	&.status-failed:before{
 		color:#800;
-		content:"✗";
+		content:"\2620";
 	}
 }
 
@@ -151,7 +155,7 @@ button:active{
 	border-color:$darkgrey !important;
 	color:$darkgrey;
 }
-.status-warning{
+.status-queued{
 	background-color:#ffb;
 	border-color:#fb4 !important;
 	color:#950;

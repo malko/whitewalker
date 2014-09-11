@@ -18,12 +18,17 @@ dd div.report:before {
 dt .actions button.status-unknown:before,
 dd div.report.status-unknown:before {
   color: #333;
-  content: "?";
+  content: "►";
 }
 dt .actions button.status-ok:before,
 dd div.report.status-ok:before {
   color: #080;
   content: "\2714";
+}
+dt .actions button.status-queued:before,
+dd div.report.status-queued:before {
+  color: #950;
+  content: "\26A1";
 }
 dt .actions button.status-running:before,
 dd div.report.status-running:before {
@@ -36,7 +41,7 @@ dd div.report.status-running:before {
 dt .actions button.status-failed:before,
 dd div.report.status-failed:before {
   color: #800;
-  content: "✗";
+  content: "\2620";
 }
 body {
   font-size: 0.675em;
@@ -128,7 +133,7 @@ button:active {
   border-color: #333 !important;
   color: #333;
 }
-.status-warning {
+.status-queued {
   background-color: #ffb;
   border-color: #fb4 !important;
   color: #950;

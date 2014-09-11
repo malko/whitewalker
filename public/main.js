@@ -1,3 +1,4 @@
+/*jshint -W052*/
 /*global $, D, stpl, io*/
 /**
 * @author Jonathan Gotti
@@ -41,8 +42,9 @@
 			.success(function(tplStr){ stpl.registerString(tplName,tplStr); })
 		);
 	});
+	stpl.registerFilter('in', function(v){ return !!~[].slice.call(arguments,1).indexOf(v);});
 	// load initial tests data
-	initialDataPromises.push($.getJSONPromise('/tests').success(function(data){ tests = data.tests; envs = data.envs}));
+	initialDataPromises.push($.getJSONPromise('/tests').success(function(data){ tests = data.tests; envs = data.envs;}));
 
 	// on ready document bind events
 	$(function(){
@@ -53,10 +55,9 @@
 			})
 			.on('setTest', function(testName, environment, test){
 				var data = {test:{name:testName}, envtest: test, opened: !!opened[testName + '-report-' + environment]};
-				console.log(testName, environment, data.opened, opened)
 				$('#' + testName + '-report-' + environment).stpl('test-report', data, true);
 				$('#' + testName +' button[rel="' + testName + '/' + environment + '"]')
-					.removeClass('status-unknown status-ok status-failed status-running')
+					.removeClass('status-unknown status-ok status-failed status-running status-queued')
 					.addClass('status-' + test.status)
 				;
 			})
@@ -67,18 +68,17 @@
 						link.detach();
 						link.attr('href',link.attr('href').replace(/(\?\d*|$)/, '?' + (new Date()).getTime()));
 						link.appendTo('head');
-						console.log(link.href)
 					});
 				}catch(e){
-					console.log(e)}
+					console.log(e);
 				}
-			)
+			})
 		;
 
 		D.all(initialDataPromises)
 			.success(function(){
 				$('#wwTestsContainer').stpl('tests', {tests:tests});
-				$('#environments').stpl('test-run-buttons', {test:{name:'all', tests:envs.map(function(a){ return {name:a}})}});
+				$('#environments').stpl('test-run-buttons', {test:{name:'all', tests:envs.map(function(a){ return {name:a};})}});
 			})
 			.rethrow()
 		;
@@ -94,7 +94,6 @@
 				button.prop('disabled',true);
 				testStatusPromise
 					.ensure(function(){
-						console.log('enabling again')
 						button.prop('disabled', false);
 					})
 					.rethrow()
