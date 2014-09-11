@@ -1,3 +1,4 @@
+/*jshint -W052*/
 "use strict";
 var D = require('d.js')
 	, fs = require('./fs-promised.js')
@@ -5,6 +6,7 @@ var D = require('d.js')
 	, cachePath = null
 	, cache = {}
 	, environments
+	, testList
 ;
 function readTestFromCache(testName){
 	var d = D()
@@ -32,14 +34,16 @@ function readListFromDir(){
 }
 
 
-function initTestEnvObj(environment, running){
+function initTestEnvObj(environment, status){
+	var now = new Date();
 	return {
 		name: environment
-		, startTime: running ? new Date() : ''
+		, queuedTime: status ? now : ''
+		, startTime: status === 'running' ? now : ''
 		, endTime: ''
 		, duration: 0
 		, out:''
-		, status: running ? 'running' : 'unknown'
+		, status: status ? status : 'unknown'
 	};
 }
 function initTestObj(testName){
@@ -85,7 +89,7 @@ function updateList(noCache){
 	;
 }
 
-module.exports = {
+module.exports = testList = {
 	_observers:[]
 	, cache: cache
 	, setCachePath: function(dirPath){
@@ -116,12 +120,23 @@ module.exports = {
 	, getEnvs: function(){ return environments; }
 	, setTestResult: function(testName, environment, testData){
 		var tests = cache[testName].tests;
-		tests[environment] = testData || initTestEnvObj(environment, true);
+		tests[environment] = testData;
 		this._observers.forEach(function(observer){
 			observer.emit && observer.emit('setTest', testName, environment, tests[environment]);
 		});
 		tests[environment].status.match(/failed|ok/) && writeTestToCache(testName);
 	}
-	, initEnvTest: function(env){ return initTestEnvObj(env, true);}
-
+	, queueTest: function(testName, environment){
+		return testList.setTestResult(testName, environment, initTestEnvObj(environment, 'queued'));
+	}
+	, startTest: function(testName, environment){
+		var test = cache[testName].tests[environment], testData;
+		if( !(test && (test.status === 'unknown' || test.status === 'queued')) ){
+			return testList.setTestResult(testName, environment, initTestEnvObj(environment, 'running'));
+		}
+		testData = test;
+		testData.status = 'running';
+		testData.startTime = new Date();
+		testList.setTestResult(testName, environment, testData);
+	}
 };
