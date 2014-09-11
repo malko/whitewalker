@@ -33,12 +33,12 @@ function seleniumStart(){
 		});
 	}
 	running = spawn("java -jar " + args.join(' '));
-	running.stdout.on('data', function(data) {
-		console.log(data.toString('utf8'));
-	});
-	running.stderr.on('data', function(data) {
-		console.error(data.toString('utf8'));
-	});
+	// running.stdout.on('data', function(data) {
+	// 	console.log(data.toString('utf8'));
+	// });
+	// running.stderr.on('data', function(data) {
+	// 	console.error(data.toString('utf8'));
+	// });
 	running.on('close', function (code) {
 		console.log('selenium process exited with code ' + code);
 	});
