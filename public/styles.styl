@@ -66,12 +66,28 @@ header{
 		margin:0;
 		padding:1em;
 	}
+	.actions{
+		text-align:right;
+		padding:1em;
+	}
 }
-
+#filters{
+	display: inline-block;
+	margin-right:1em;
+}
 #wwUpdate{
 	position: absolute;
 	top:1.75em;
 	right:1em;
+}
+
+#wwReportContainer{
+	color:$white;
+	background:$darkgrey;
+	width:90%;
+	padding:.8em;
+	margin:auto;
+	font-size:1.25em;
 }
 
 dl{
@@ -148,8 +164,30 @@ button:active{
 	background:#eee;
 	box-shadow:none;
 }
-
-
+#statusMeter{
+	display:flex;
+	padding:0;
+	margin:0;
+	transition: line-height  250ms ease-in, text-indent 350ms ease-out;
+	line-height:.675em;
+	text-indent:-150%;
+	text-align:center;
+	white-space:nowrap;
+	font-size:.8em;
+	&:hover{
+		line-height:2em;
+		text-indent:0px;
+	}
+	li{
+		display: inline-block;
+		&.status-ok{ background-color: #CCFFCC; }
+		&.status-unknown{ background-color: $white; }
+		&.status-running{ background-color: #CCCCFF; }
+		&.status-queued{ background-color: #FFFFCC; }
+		&.status-failed{ background-color: #FFCCCC; }
+		overflow:hidden;
+	}
+}
 .status-unknown{
 	background-color:$white;
 	border-color:$darkgrey !important;

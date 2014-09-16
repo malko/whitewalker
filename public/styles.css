@@ -59,10 +59,26 @@ header h1 {
   margin: 0;
   padding: 1em;
 }
+header .actions {
+  text-align: right;
+  padding: 1em;
+}
+#filters {
+  display: inline-block;
+  margin-right: 1em;
+}
 #wwUpdate {
   position: absolute;
   top: 1.75em;
   right: 1em;
+}
+#wwReportContainer {
+  color: #fff;
+  background: #333;
+  width: 90%;
+  padding: 0.8em;
+  margin: auto;
+  font-size: 1.25em;
 }
 dl {
   margin: auto;
@@ -127,6 +143,40 @@ button:focus {
 button:active {
   background: #eee;
   box-shadow: none;
+}
+#statusMeter {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  transition: line-height 250ms ease-in, text-indent 350ms ease-out;
+  line-height: 0.675em;
+  text-indent: -150%;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 0.8em;
+}
+#statusMeter:hover {
+  line-height: 2em;
+  text-indent: 0px;
+}
+#statusMeter li {
+  display: inline-block;
+  overflow: hidden;
+}
+#statusMeter li.status-ok {
+  background-color: #cfc;
+}
+#statusMeter li.status-unknown {
+  background-color: #fff;
+}
+#statusMeter li.status-running {
+  background-color: #ccf;
+}
+#statusMeter li.status-queued {
+  background-color: #ffc;
+}
+#statusMeter li.status-failed {
+  background-color: #fcc;
 }
 .status-unknown {
   background-color: #fff;

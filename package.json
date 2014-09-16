@@ -5,8 +5,8 @@
     "whitewalker": "./bin/whitewalker"
   },
   "dependencies": {
-    "connect": "^2.25.7",
-    "d.js": "^0.6.0",
+    "connect": "^2.26.0",
+    "d.js": "^0.7.0",
     "nightwatch": "^0.5.18",
     "socket.io": "^1.0.6"
   },

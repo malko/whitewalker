@@ -13,10 +13,22 @@
 	<header>
 		<h1>White Walker</h1>
 		<div class="actions">
-			<span id="environments"></span>
+			<div id="filters">
+				<strong>filters:</strong>
+				<label>state <select id="statusFilter">
+					<option value="">all</option>
+					<option value="ok">passed</option>
+					<option value="running">running</option>
+					<option value="queued">scheduled</option>
+					<option value="failed">failed</option>
+					<option value="unknown">never run</option>
+				</select></label>
+			</div>
+			Run all tests <span id="environments"></span>
 			<button id="wwUpdate">synchronize test repository</button>
 		</div>
 	</header>
+	<div id="wwReportContainer"></div>
 	<div id="wwTestsContainer"></div>
 </body>
 </html>

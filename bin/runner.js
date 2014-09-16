@@ -18,6 +18,7 @@ var connect = require('connect')
 	// , runningTestsPromise = {}
 	, updatePromise = null
 	, selenium = require('../libs/selenium-launcher.js')
+	, platform = ''
 ;
 
 // utils
@@ -39,7 +40,14 @@ function setEnvs(){
 		env.screenshotsPath && ensureDir(path.normalize(settings.rootdir + env.screenshotsPath));
 	});
 }
-
+function getPlatform(){
+	if( platform ){
+		return platform;
+	}
+	var os = require('os');
+	platform = os.hostname() + ':' + os.type() + ' ' + os.release();
+	return platform;
+}
 // set working dir
 process.chdir(settings.rootdir);
 
@@ -76,7 +84,13 @@ app
 	.on('/tests/?', function(req, res, next){
 		noCache(res);
 		res.setHeader('Content-type', 'application/json; charset=utf8');
-		res.end(JSON.stringify({tests:testList.cache, envs:testList.getEnvs()}));
+		res.end(JSON.stringify({
+			tests:testList.cache
+			, envs:testList.getEnvs()
+			, platform: getPlatform()
+			, testCount: Object.keys(testList.cache).length
+			, versionning: fs.existsSync('.git')
+		}));
 		next();
 	})
 	/*.on('/tests/([a-zA-Z0-9_-]+])/', function(req, res, next, testName){

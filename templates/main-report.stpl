@@ -1,0 +1,8 @@
+Platform: {{platform}}
+<ul id="statusMeter">
+<li class="status-ok" style="flex:{{counters.ok}};" title="{{counters.ok}} passed">{{counters.ok}} passed</li>
+<li class="status-running" style="flex:{{counters.running}};" title="{{counters.running}} running">{{counters.running}} running</li>
+<li class="status-queued" style="flex:{{counters.queued}};" title="{{counters.queued}} scheduled">{{counters.queued}} scheduled</li>
+<li class="status-failed" style="flex:{{counters.failed}};" title="{{counters.failed}} failed">{{counters.failed}} failed</li>
+<li class="status-unknown" style="flex:{{counters.unknown}};" title="{{counters.unknown}} never run">{{counters.unknown}} never run</li>
+</ul>
