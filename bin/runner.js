@@ -9,13 +9,11 @@ var connect = require('connect')
 	, execPromise = D.nodeCapsule(childProcess, childProcess.exec)
 	, server = http.createServer(app)
 	, socketio = require('socket.io')(server)
-	// , cleanExp = /[^a-z_0-9-]/ig
 	, nightwatchConfig = null
 	, settings = require('../libs/opt-parsing.js')
 	, testPreparator = require('../libs/test-prepare.js')
 	, testList = require('../libs/test-list.js')
 	, testRunner = require('../libs/test-runner.js')(settings, testList, testPreparator)
-	// , runningTestsPromise = {}
 	, updatePromise = null
 	, selenium = require('../libs/selenium-launcher.js')
 	, platform = ''
@@ -33,8 +31,6 @@ function noCache(res){
 	return res;
 }
 function setEnvs(){
-	// tell connected clients about the new env
-	//socketio.emit('setEnvs', nightwatchConfig.getEnvs());
 	testList.setEnvs(nightwatchConfig.getEnvs(true));
 	nightwatchConfig.getEnvs().forEach(function(env){
 		env.screenshotsPath && ensureDir(path.normalize(settings.rootdir + env.screenshotsPath));
