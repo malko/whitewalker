@@ -1,16 +1,23 @@
 {
-  "name": "whiteWalker",
-  "description": "automated nightwatch testing front-end",
-  "bin": {
-    "whitewalker": "./bin/whitewalker"
-  },
-  "dependencies": {
-    "connect": "^2.26.0",
-    "d.js": "^0.7.0",
-    "nightwatch": "^0.5.18",
-    "socket.io": "^1.0.6"
-  },
-  "devDependencies": {
-    "stylus": "^0.48.1"
-  }
+	"name": "whiteWalker",
+	"description": "automated nightwatch testing front-end",
+	"author": "Jonathan Gotti <jgotti@jgotti.org>",
+	"licence": "MIT",
+	"version": "0.0.1"
+	"bin": {
+		"whitewalker": "./bin/whitewalker"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/malko/whitewalker"
+	},
+	"dependencies": {
+		"connect": "^2.26.0",
+		"d.js": "^0.7.0",
+		"nightwatch": "^0.5.18",
+		"socket.io": "^1.0.6"
+	},
+	"devDependencies": {
+		"stylus": "^0.48.1"
+	}
 }
