@@ -16,6 +16,8 @@ $fg=$darkgrey;
 }
 
 $border-radius{ border-radius:.3em;}
+
+//-- mixin to apply status colors and symbol to any element regarding their status-* class
 $statusSymbol{
 	&:before{
 		display:inline-block;
@@ -50,6 +52,7 @@ $statusSymbol{
 	}
 }
 
+//-- defining basic style for native elements
 body{
 	font-size:.675em;
 	font-family:Sans Serif;
@@ -58,6 +61,27 @@ body{
 	margin:0;
 }
 
+button{
+	border: 1px solid #333;
+	border-radius:.2em;
+	box-shadow: 1px 1px 1px #333;
+	color:#333;
+	background:#ddd;
+	cursor:pointer;
+}
+button:hover{
+	opacity:.7;
+}
+button:focus{
+	outline:none;
+	box-shadow: 0px 0px 3px $orange;
+}
+button:active{
+	background:#eee;
+	box-shadow:none;
+}
+
+//-- this is the banner of the site
 header{
 	background:$darkblue;
 	color: $white;
@@ -71,17 +95,23 @@ header{
 		padding:1em;
 	}
 }
+//-- filters container in the header
 #filters{
 	display: inline-block;
 	margin-right:1em;
 }
+
+//-- git update button displayed only if the root test directory is a git repository
 #wwUpdate{
 	position: absolute;
 	top:1.75em;
 	right:1em;
+	display:none;
 }
 
+//-- container for the global report
 #wwReportContainer{
+	position:relative;
 	color:$white;
 	background:$darkgrey;
 	width:90%;
@@ -89,81 +119,7 @@ header{
 	margin:auto;
 	font-size:1.25em;
 }
-
-dl{
-	margin:auto;
-	width:90%;
-	padding:1em;
-	background:$darkgrey;
-}
-dt{
-	background:$white;
-	@extend $border-radius;
-	position:relative;
-	/*line-height:3em;*/
-	padding:1em;
-	.name{
-		font-weight:bold;
-		font-size:1.1em;
-	}
-	.actions{
-		position:absolute;
-		right:1em;
-		top:.75em;
-		button{
-			@extend $statusSymbol;
-		}
-	}
-}
-dd{
-	background:$white;
-	width:95%;
-	margin:0 auto 1em auto;
-	padding:1em;
-	overflow:auto;
-	max-height:350px;
-	@extend $border-radius;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-	div.report {
-		padding:1em;
-		margin:0 0 .5em 0;
-		border-style:solid;
-		border-width:1px;
-		@extend $border-radius;
-		@extend $statusSymbol;
-		.name{
-			font-weight:bold;
-		}
-		&.open{
-			pre{
-				display:block;
-			}
-		}
-		pre{
-			display:none;
-		}
-	}
-}
-
-button{
-	border: 1px solid #333;
-	border-radius:.2em;
-	box-shadow: 1px 1px 1px #333;
-	color:#333;
-	background:#ddd;
-}
-button:hover{
-	opacity:.7;
-}
-button:focus{
-	outline:none;
-	box-shadow: 0px 0px 3px $orange;
-}
-button:active{
-	background:#eee;
-	box-shadow:none;
-}
+//-- this is the bar display in the global report
 #statusMeter{
 	display:flex;
 	padding:0;
@@ -187,6 +143,87 @@ button:active{
 		&.status-failed{ background-color: #FFCCCC; }
 		overflow:hidden;
 	}
+}
+
+//-- list of test cases
+#wwTestsContainer{
+	position:relative;
+}
+dl{
+	margin:auto;
+	width:90%;
+	padding:1em;
+	background:$darkgrey;
+}
+dt{
+	background:$white;
+	@extend $border-radius;
+	position:relative;
+	/*line-height:3em;*/
+	padding:1em;
+	margin:.5em 0 0 0;
+	.name{
+		font-weight:bold;
+		font-size:1.1em;
+		cursor:pointer;
+	}
+	.actions{
+		position:absolute;
+		right:1em;
+		top:.75em;
+		button{
+			@extend $statusSymbol;
+		}
+	}
+	&.hidden, &.hidden + dd, &.collapsed + dd {
+		display:none;
+	}
+}
+dd{
+	background:$white;
+	width:95%;
+	margin:0 auto 1em auto;
+	padding:1em;
+	overflow:auto;
+	max-height:350px;
+	@extend $border-radius;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	div.report {
+		padding:1em;
+		margin:0;
+		border-style:solid;
+		border-width:1px;
+		@extend $border-radius;
+		@extend $statusSymbol;
+		cursor:pointer;
+		.name{
+				font-weight:bold;
+		}
+		&.open{
+			pre, textarea{
+				display:block;
+				cursor:text;
+				border:none;
+				background:inherit;
+				color:inherit;
+				width:100%;
+				overflow:visible;
+			}
+		}
+		pre, textarea{
+			display:none;
+		}
+	}
+}
+//-- expand toggle buttton
+.expander{
+	cursor:pointer;
+	color:$white;
+	position:absolute;
+	right:5%;
+	top:0;
+	text-align:right;
 }
 .status-unknown{
 	background-color:$white;

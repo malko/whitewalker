@@ -50,6 +50,25 @@ body {
   background: #bbb;
   margin: 0;
 }
+button {
+  border: 1px solid #333;
+  border-radius: 0.2em;
+  box-shadow: 1px 1px 1px #333;
+  color: #333;
+  background: #ddd;
+  cursor: pointer;
+}
+button:hover {
+  opacity: 0.7;
+}
+button:focus {
+  outline: none;
+  box-shadow: 0px 0px 3px #ff7f2b;
+}
+button:active {
+  background: #eee;
+  box-shadow: none;
+}
 header {
   background: #000111;
   color: #fff;
@@ -71,78 +90,16 @@ header .actions {
   position: absolute;
   top: 1.75em;
   right: 1em;
+  display: none;
 }
 #wwReportContainer {
+  position: relative;
   color: #fff;
   background: #333;
   width: 90%;
   padding: 0.8em;
   margin: auto;
   font-size: 1.25em;
-}
-dl {
-  margin: auto;
-  width: 90%;
-  padding: 1em;
-  background: #333;
-}
-dt {
-  background: #fff;
-  position: relative;
-/*line-height:3em;*/
-  padding: 1em;
-}
-dt .name {
-  font-weight: bold;
-  font-size: 1.1em;
-}
-dt .actions {
-  position: absolute;
-  right: 1em;
-  top: 0.75em;
-}
-dd {
-  background: #fff;
-  width: 95%;
-  margin: 0 auto 1em auto;
-  padding: 1em;
-  overflow: auto;
-  max-height: 350px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-dd div.report {
-  padding: 1em;
-  margin: 0 0 0.5em 0;
-  border-style: solid;
-  border-width: 1px;
-}
-dd div.report .name {
-  font-weight: bold;
-}
-dd div.report.open pre {
-  display: block;
-}
-dd div.report pre {
-  display: none;
-}
-button {
-  border: 1px solid #333;
-  border-radius: 0.2em;
-  box-shadow: 1px 1px 1px #333;
-  color: #333;
-  background: #ddd;
-}
-button:hover {
-  opacity: 0.7;
-}
-button:focus {
-  outline: none;
-  box-shadow: 0px 0px 3px #ff7f2b;
-}
-button:active {
-  background: #eee;
-  box-shadow: none;
 }
 #statusMeter {
   display: flex;
@@ -177,6 +134,79 @@ button:active {
 }
 #statusMeter li.status-failed {
   background-color: #fcc;
+}
+#wwTestsContainer {
+  position: relative;
+}
+dl {
+  margin: auto;
+  width: 90%;
+  padding: 1em;
+  background: #333;
+}
+dt {
+  background: #fff;
+  position: relative;
+/*line-height:3em;*/
+  padding: 1em;
+  margin: 0.5em 0 0 0;
+}
+dt .name {
+  font-weight: bold;
+  font-size: 1.1em;
+  cursor: pointer;
+}
+dt .actions {
+  position: absolute;
+  right: 1em;
+  top: 0.75em;
+}
+dt.hidden,
+dt.hidden + dd,
+dt.collapsed + dd {
+  display: none;
+}
+dd {
+  background: #fff;
+  width: 95%;
+  margin: 0 auto 1em auto;
+  padding: 1em;
+  overflow: auto;
+  max-height: 350px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+dd div.report {
+  padding: 1em;
+  margin: 0;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+}
+dd div.report .name {
+  font-weight: bold;
+}
+dd div.report.open pre,
+dd div.report.open textarea {
+  display: block;
+  cursor: text;
+  border: none;
+  background: inherit;
+  color: inherit;
+  width: 100%;
+  overflow: visible;
+}
+dd div.report pre,
+dd div.report textarea {
+  display: none;
+}
+.expander {
+  cursor: pointer;
+  color: #fff;
+  position: absolute;
+  right: 5%;
+  top: 0;
+  text-align: right;
 }
 .status-unknown {
   background-color: #fff;

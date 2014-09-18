@@ -111,12 +111,14 @@
 
 		D.all(initialDataPromises)
 			.success(function(){
+				var initialState = window.location.hash.match(/!\/(.*)$/);
 				$('#wwUpdate').toggle(dataCache.versionning);
 				$('#wwTestsContainer').stpl('tests', dataCache);
 				$('#environments').stpl('test-run-buttons', {
 					test: {name: 'all', tests: dataCache.envs.map(function(a){ return {name:a};}) }
 					, envs: dataCache.envs
 				});
+				initialState && $statusFilter.val(initialState).change();
 				reportRefresh(true);
 			})
 			.rethrow()
@@ -137,6 +139,26 @@
 					})
 					.rethrow()
 				;
+				return false;
+			})
+			.on('click', '.expander', function(){
+				var dts = $('dt'), collapsed = !!dts.filter('.collapsed').length;
+				dts
+					.toggleClass('expanded', collapsed)
+					.toggleClass('collapsed', !collapsed)
+				;
+			})
+			.on('click', 'dt', function(){
+				var dt = $(this)//.closest('dt')
+					, collapsed =  dt.hasClass('collapsed')
+				;
+				dt
+					.toggleClass('expanded', collapsed)
+					.toggleClass('collapsed', !collapsed)
+				;
+			})
+			.on('click', 'pre, textarea', function(e){
+				e.stopImmediatePropagation();
 			})
 			.on('click', 'dd > div', function(){
 				$(this).toggleClass('open', opened[this.id] = !opened[this.id]);
@@ -145,9 +167,10 @@
 		$statusFilter.on('change', function(){
 			var state = $(this).val()
 				, stateClass = '.status-' + state
-				, elemts = $('dt,dd').show()
+				, elemts = $('dt,dd').removeClass("hidden")
 			;
-			state && elemts.not(':has('+stateClass+')').hide();
-		})
+			state && elemts.not(':has('+stateClass+')').addClass("hidden");
+			window.location.hash = state ? '!/' + state : '';
+		});
 	});
 })();

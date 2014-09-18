@@ -1,1 +1,3 @@
-<dl>{{#tests as test}}{{>test}}{{/tests}}</dl>
+<span class="expander"> +/- expand/collapse all</span>
+<dl>
+{{#tests as test}}{{>test}}{{/tests}}</dl>

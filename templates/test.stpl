@@ -1,4 +1,4 @@
-	<dt id="{{test.name}}">
+	<dt id="{{test.name}}" class="collapsed">
 		<span class="name">{{test.name}}</span>
 		<div class="actions">{{>test-run-buttons}}</div>
 	</dt>
