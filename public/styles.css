@@ -186,18 +186,22 @@ dd div.report {
 dd div.report .name {
   font-weight: bold;
 }
-dd div.report.open pre,
-dd div.report.open textarea {
+dd div.report.open code {
   display: block;
   cursor: text;
-  border: none;
+  width: 100%;
+  overflow: auto;
+  border: solid 1px;
+}
+dd div.report.open textarea {
   background: inherit;
   color: inherit;
-  width: 100%;
-  overflow: visible;
+  font-family: monospace;
+  border: none;
+  width: 99%;
+  height: 200px;
 }
-dd div.report pre,
-dd div.report textarea {
+dd div.report code {
   display: none;
 }
 .expander {

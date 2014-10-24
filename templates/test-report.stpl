@@ -9,5 +9,5 @@
 		{{envtest.status|in:failed,ok?}}in {{envtest.duration}}s {{?envtest.status}}
 		{{envtest.status|=running?}}running{{?envtest.status}}
 	</span>
-	<textarea>{{envtest.out}}</textarea>
+	<code><textarea>{{envtest.out}}</textarea></code>
 </div>

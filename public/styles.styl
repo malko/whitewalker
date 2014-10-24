@@ -201,17 +201,23 @@ dd{
 				font-weight:bold;
 		}
 		&.open{
-			pre, textarea{
+			code{
 				display:block;
 				cursor:text;
-				border:none;
+				width:100%;
+				overflow:auto;
+				border:solid 1px;
+			}
+			textarea{
 				background:inherit;
 				color:inherit;
-				width:100%;
-				overflow:visible;
+				font-family:monospace;
+				border:none;
+				width:99%;
+				height:200px;
 			}
 		}
-		pre, textarea{
+		code{
 			display:none;
 		}
 	}
