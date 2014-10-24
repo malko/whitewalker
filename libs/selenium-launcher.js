@@ -4,9 +4,6 @@ var spawn = require('child_process').exec
 		server_path:''
 		, port: 4444
 		, host: '127.0.0.1'
-		, cli_args: {
-			"webdriver.chrome.driver": "/home/malko/git/whiteWalkerTests/bin/chromedriver"
-		}
 	}
 	, running = null
 ;
@@ -25,6 +22,8 @@ function seleniumStart(){
 		config.server_path
 		, '-port', config.port
 		, '-host', config.host
+		, '-timeout=' + (config.timeout || 15)
+		, '-browserTimeout=' + (config.browserTimeout || 30)
 	];
 
 	if( config.cli_args ){
