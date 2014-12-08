@@ -9,8 +9,8 @@ var connect = require('connect')
 	, execPromise = D.nodeCapsule(childProcess, childProcess.exec)
 	, server = http.createServer(app)
 	, socketio = require('socket.io')(server)
-	, nightwatchConfig = null
 	, settings = require('../libs/opt-parsing.js')
+	, frameworkAdapter = require('../libs/frameworkAdapter.js')(settings.rootdir, settings.adapter)
 	, testPreparator = require('../libs/test-prepare.js')
 	, testList = require('../libs/test-list.js')
 	, testRunner = require('../libs/test-runner.js')(settings, testList, testPreparator)
@@ -31,8 +31,8 @@ function noCache(res){
 	return res;
 }
 function setEnvs(){
-	testList.setEnvs(nightwatchConfig.getEnvs(true));
-	nightwatchConfig.getEnvs().forEach(function(env){
+	testList.setEnvs(frameworkAdapter.getEnvs(true));
+	frameworkAdapter.getEnvs().forEach(function(env){
 		env.screenshotsPath && ensureDir(path.normalize(settings.rootdir + env.screenshotsPath));
 	});
 }
@@ -53,8 +53,8 @@ ensureDir(settings.paths.logs);
 ensureDir(settings.rootdir + 'screenshots');
 
 // load and watch the nightwatch config
-nightwatchConfig =  require('../libs/nightwatch-json-parser.js')
-	.parse(settings.rootdir + 'nightwatch.json')
+frameworkAdapter
+	.parse()
 	.watch(function(){
 		setEnvs();
 	})
@@ -66,8 +66,8 @@ testList.setCachePath('.whitewalker/').load();
 testList.registerObserver(socketio);
 
 // check for selenium autostart
-if(settings.startSelenium && nightwatchConfig.config.selenium){
-	settings.startSelenium && selenium.configure(nightwatchConfig.config.selenium).start();
+if(settings.startSelenium && frameworkAdapter.config.selenium){
+	settings.startSelenium && selenium.configure(frameworkAdapter.config.selenium).start();
 } else {
 	console.log("won't manage selenium server");
 }

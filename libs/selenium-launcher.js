@@ -9,11 +9,13 @@ var spawn = require('child_process').exec
 ;
 
 function seleniumConfigure(cfg){
+	/*jshint validthis:true*/
 	config = cfg;
 	return this;
 }
 
 function seleniumStart(){
+	/*jshint validthis:true*/
 	if( running ){
 		return this;
 	}
@@ -25,10 +27,14 @@ function seleniumStart(){
 		, '-timeout=' + (config.timeout || 15)
 		, '-browserTimeout=' + (config.browserTimeout || 30)
 	];
-
-	if( config.cli_args ){
-		Object.keys(config.cli_args).forEach(function(k){
-			args.push('-D' + k + '=' + config.cli_args[k]);
+	if( config.args ){
+		Object.keys(config.args).forEach(function(k){
+			args.push('-' + k + '=' + config.args[k]);
+		});
+	}
+	if( config.driverPaths ){
+		Object.keys(config.driverPaths).forEach(function(k){
+			args.push('-D' + k + '=' + config.driverPaths[k]);
 		});
 	}
 	running = spawn("java -jar " + args.join(' '));
@@ -45,6 +51,7 @@ function seleniumStart(){
 }
 
 function seleniumStop(){
+	/*jshint validthis:true*/
 	if(! running ){
 		return this;
 	}
