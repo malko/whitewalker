@@ -1,0 +1,34 @@
+{
+	"preset": "default",
+	"indent": {
+		"value": "\t"
+	},
+	"lineBreak": {
+		"value": "\n",
+		"before":{
+			"Property": "-1",
+			"ObjectExpressionClosingBrace": "-1"
+		},
+		"after": {
+			"ObjectExpressionOpeningBrace": "-1",
+			"MultipleVariableDeclaration":  1
+		}
+	},
+	"whiteSpace": {
+		"before": {
+			"FunctionExpression" : 0
+		},
+		"after": {
+			"FunctionReservedWord": 0,
+			"FunctionName" : "0",
+			"ObjectExpressionOpeningBrace": "0"
+		}
+	},
+	"plugins": [
+			"esformatter-quotes"
+	],
+	"quotes": {
+		"type": "single",
+		"avoidEscape": false
+	}
+}
