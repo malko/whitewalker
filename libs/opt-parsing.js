@@ -6,6 +6,7 @@ var path = require('path')
 		, paths:{}
 		, livereload: false
 		, startSelenium: false
+		, adapter: 'nightwatch'
 	}
 ;
 // arguments parsing
@@ -49,6 +50,9 @@ process.argv.forEach(function(arg, id){
 		case "--selenium":
 			settings.startSelenium = true;
 			break;
+		case "-a":
+		case "--adaper":
+			settings.adapter = argValue;
 	}
 });
 

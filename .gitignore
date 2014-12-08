@@ -4,3 +4,4 @@ tests
 steps
 screenshots
 tmp
+.npmignore

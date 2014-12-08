@@ -11,6 +11,16 @@ methods.forEach(function(m){
 	fs[m + 'Promise'] = D.nodeCapsule(fs, fs[m]);
 });
 
+//----- NON STANDARD METHODS -----//
+fs.existsPromise = function(path){
+	var d = D();
+	fs.exists(path, d.resolve);
+	return d.promise;
+};
+
+
+
+//----- JSON RELATED METHODS -----//
 fs.readJsonSync = function readJsonSync(filename, options){
 	if( options && !options.encoding ){
 		options.encoding='utf8';
@@ -47,7 +57,7 @@ fs.watchDeduped = function(filename, options, listener){
 		options = undefined;
 	}
 	var ttl = options && options.ttl || 100
-		 , lasttimes = {}
+		, lasttimes = {}
 	;
 	return fs.watch(filename, options ||  {}, function(eventName, fileName){
 		var now = (new Date()).getTime()
@@ -58,8 +68,8 @@ fs.watchDeduped = function(filename, options, listener){
 		}
 		lasttimes[eventName + ':' + fileName] = now;
 		listener(eventName, fileName);
-	})
+	});
 
-}
+};
 
 module.exports = fs;
