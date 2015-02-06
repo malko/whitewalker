@@ -1,5 +1,5 @@
 "use strict";
-var fs = require('../fs-promised.js');
+var fs = require('fs-promised');
 module.exports = {
 	// how the configFileName should be named
 	configFileName: 'protractor.conf.js'
@@ -16,6 +16,7 @@ module.exports = {
 				}
 				, environments: {}
 				, adapter: data.whitewalker || {}
+				, rawConfig = data
 			}
 		;
 

@@ -16,7 +16,7 @@ function applyDefaults(config, defaults) {
 function getTime(){ return (new Date()).getTime(); }
 
 function FrameworkAdapter (configPath, adapterName) {
-	this.adapter = require('./adapters/' + adapterName.replace(/\.*[\/;]/g,'') + '.js');
+	this.adapter = require('./adapters/' + adapterName + '/' + adapterName.replace(/\.*[\/;]/g,'') + '.js');
 	this.loadtime = 0;
 	this.path = path.normalize(configPath + '/' + this.adapter.configFileName);
 	this.watcher = null;
@@ -50,7 +50,7 @@ FrameworkAdapter.prototype.parse = function nightwatchparser_parse(){
 			timeout: 15
 			, browserTimeout: 30
 		}
-		, driverPaths : {
+		, driversPath : {
 			'webdriver.chrome.driver': ''
 			, 'webdriver.ie.driver': ''
 			, 'phantomjs.binary.path': ''
@@ -69,7 +69,6 @@ FrameworkAdapter.prototype.parse = function nightwatchparser_parse(){
 			, "acceptSslCerts": true
 		}
 	});
-	debugger;
 	Object.keys(self.config.environments).forEach( function(envName){
 		applyDefaults(self.config.environments[envName], envDefaults);
 	});

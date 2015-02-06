@@ -1,7 +1,7 @@
 "use strict";
 var spawn = require('child_process').exec
 	, config = {
-		server_path:''
+		path:''
 		, port: 4444
 		, host: '127.0.0.1'
 	}
@@ -21,7 +21,7 @@ function seleniumStart(){
 	}
 	console.log("starting selenium standalone server");
 	var args = [
-		config.server_path
+		config.path
 		, '-port', config.port
 		, '-host', config.host
 		, '-timeout=' + (config.timeout || 15)
@@ -32,9 +32,10 @@ function seleniumStart(){
 			args.push('-' + k + '=' + config.args[k]);
 		});
 	}
-	if( config.driverPaths ){
-		Object.keys(config.driverPaths).forEach(function(k){
-			args.push('-D' + k + '=' + config.driverPaths[k]);
+
+	if( config.driversPath ){
+		Object.keys(config.driversPath).forEach(function(k){
+			config.driversPath[k] && args.push('-D' + k + '=' + config.driversPath[k]);
 		});
 	}
 	running = spawn("java -jar " + args.join(' '));
