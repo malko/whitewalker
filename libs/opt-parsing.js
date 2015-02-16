@@ -28,6 +28,7 @@ process.argv.forEach(function(arg, id){
 				, 'Options (all are optionals):'
 				, '-p, --port		port to bind whitewalker server to'
 				, '-t, --testdir	path to root test dir containing the nightwatch.json config file'
+				, '-a, --adapter	one of supported adapters nightwatch / protractor'
 				, ''
 				, 'Flags (all are optionals)'
 				, '--livereload		livereload for stylus file'

@@ -11,7 +11,7 @@ function cleanName(name){
 	return name.replace(cleanExp,'');
 }
 
-module.exports = function(settings, testList, testPreparator){
+module.exports = function(settings, testList, frameworkAdapter){
 
 	var prepareAndExecTest = function prepareAndExecTest(testName, environment){
 			var testId;
@@ -38,7 +38,7 @@ module.exports = function(settings, testList, testPreparator){
 			testList.queueTest(testName, environment);
 			runningTestsPromise[testId] = D.resolved(runningEndPromise) // use D.resolved so will get a promise even if not ant test running
 				.success(function(){
-					return testPreparator.prepare(testName, settings.paths.tests, settings.paths.tmp, environment);
+					return frameworkAdapter.prepareTest(testName, settings.paths.tests, settings.paths.tmp, environment);
 				})
 				.success(function(testFilename){
 					return execTestPromise(testFilename, testName, environment)
@@ -61,8 +61,9 @@ module.exports = function(settings, testList, testPreparator){
 		, execTestPromise = function execTestPromise(testFilename, testName, environment){
 			var execDefer = D();
 			testList.startTest(testName, environment);
+
 			childProcess.exec(
-				settings.paths.nightwatch + ' -e ' + environment + ' -c ./nightwatch.json -t ' + testFilename
+				frameworkAdapter.getCmd(environment, testFilename)
 				, function(err, stdout, stderr){
 					try{
 						var status = err ? 'failed' : 'ok'
