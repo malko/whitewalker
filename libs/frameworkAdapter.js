@@ -118,14 +118,14 @@ FrameworkAdapter.prototype.getEnvs = function nightwatchparser_getenvs(nameOnly)
 	});
 };
 
-FrameworkAdapter.prototype.getCmd = function ( environmentName, testPath) {
+FrameworkAdapter.prototype.getCmd = function (environmentName, testPath) {
 	var args = {
 		configPath: this.path
-		, runnerPath: this.config.adapter.runnerPath || this.adapter.configFileName
+		, runnerPath: this.config.adapter.runnerPath || null
 		, environment: environmentName
 		, testPath: testPath
 	};
-	return this.adapter.replace(/\{\{\s*(.*?)(?:\s*||\s*(.*?))?\s*\}\}/g, function(m, key, deflt){
+	return this.adapter.cmdTemplate.replace(/\{\{\s*(.*?)(?:\s*\|\|\s*(.*?))?\s*\}\}/g, function(m, key, deflt){
 		return args[key] || deflt || m;
 	});
 };
