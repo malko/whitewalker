@@ -37,5 +37,9 @@ module.exports = {
 		// take an internal config representation, translate it to the adapter format and write it to the disk.
 		// it must return the output filename on success or false on error
 	}
+	,testPreparator: function(testName, testPath, tmpPath, environment){
+		// receive name of the testCase to run, path to the test directory, path to temporary directory and the test environment settings
+		// it must return a promise of  full path to the temporary file to test
+	}
 };
 ```

@@ -130,6 +130,11 @@ FrameworkAdapter.prototype.getCmd = function ( environmentName, testPath) {
 	});
 };
 
+FrameworkAdapter.prototype.prepareTest = function(testName, testPath, tmpPath, environment) {
+	return this.adapter.testPreparator(testName, testPath, tmpPath, environment);
+};
+
+
 module.exports = function (cfgPath, adapterName) {
 	return new FrameworkAdapter(cfgPath, adapterName || 'nightwatch');
 };
