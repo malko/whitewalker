@@ -1,7 +1,7 @@
 /*jshint node:true, strict:false, laxcomma:true, laxbreak:true */
 var connect = require('connect')
 	, http = require('http')
-	, fs = require('../libs/fs-promised.js')
+	, fs = require('fs-promised')
 	, path = require('path')
 	, app = require('../libs/app-extends.js').extend(connect())
 	, D = require('d.js')

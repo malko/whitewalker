@@ -1,6 +1,7 @@
 "use strict";
-var fs = require('./fs-promised.js')
+var fs = require('fs-promised')
 	, path = require('path')
+	, whitewalkerAdapters = require('whitewalker-adapters')
 	, minTTL = 100
 ;
 
@@ -16,7 +17,7 @@ function applyDefaults(config, defaults) {
 function getTime(){ return (new Date()).getTime(); }
 
 function FrameworkAdapter (configPath, adapterName) {
-	this.adapter = require('./adapters/' + adapterName + '/' + adapterName.replace(/\.*[\/;]/g,'') + '.js');
+	this.adapter = whitewalkerAdapters.getInstance(adapterName);
 	this.loadtime = 0;
 	this.path = path.normalize(configPath + '/' + this.adapter.configFileName);
 	this.watcher = null;
@@ -27,7 +28,7 @@ function FrameworkAdapter (configPath, adapterName) {
 	};
 }
 
-FrameworkAdapter.prototype.parse = function nightwatchparser_parse(){
+FrameworkAdapter.prototype.parse = function frameworkAdapter_parse(){
 	var self = this, data, envDefaults;
 	try {
 		data = this.adapter.configLoader(self.path);
@@ -77,7 +78,7 @@ FrameworkAdapter.prototype.parse = function nightwatchparser_parse(){
 	return self;
 };
 
-FrameworkAdapter.prototype.watch = function nightwatchparser_watch(callback) {
+FrameworkAdapter.prototype.watch = function frameworkAdapter_watch(callback) {
 	var self = this;
 	if (self.watcher) {
 		return;
@@ -96,13 +97,13 @@ FrameworkAdapter.prototype.watch = function nightwatchparser_watch(callback) {
 	return self;
 };
 
-FrameworkAdapter.prototype.stopWatching = function nightwatchparser_stopwatching() {
+FrameworkAdapter.prototype.stopWatching = function frameworkAdapter_stopwatching() {
 	this.watcher && this.watcher.stop && this.watcher.stop();
 	this.watcher = null;
 	return this;
 };
 
-FrameworkAdapter.prototype.getEnvs = function nightwatchparser_getenvs(nameOnly) {
+FrameworkAdapter.prototype.getEnvs = function frameworkAdapter_getenvs(nameOnly) {
 	var settings = this.config.environments, envs = Object.keys(this.config.environments).filter(function (a) {
 		return !!settings[a].desiredCapabilities;
 	});

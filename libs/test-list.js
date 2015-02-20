@@ -1,7 +1,7 @@
 /*jshint -W052*/
 "use strict";
 var D = require('d.js')
-	, fs = require('./fs-promised.js')
+	, fs = require('fs-promised')
 	, path = require('path')
 	, cachePath = null
 	, cache = {}
