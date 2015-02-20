@@ -3,7 +3,7 @@
   "description": "automated nightwatch testing front-end",
   "author": "Jonathan Gotti <jgotti@jgotti.org>",
   "licence": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "bin": {
     "whitewalker": "./bin/whitewalker"
   },
