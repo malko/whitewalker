@@ -105,20 +105,15 @@ header .actions {
   display: flex;
   padding: 0;
   margin: 0;
-  transition: line-height 250ms ease-in, text-indent 350ms ease-out;
-  line-height: 0.675em;
-  text-indent: -150%;
   text-align: center;
   white-space: nowrap;
   font-size: 0.8em;
-}
-#statusMeter:hover {
   line-height: 2em;
-  text-indent: 0px;
 }
 #statusMeter li {
   display: inline-block;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 #statusMeter li.status-ok {
   background-color: #cfc;
@@ -172,7 +167,6 @@ dd {
   margin: 0 auto 1em auto;
   padding: 1em;
   overflow: auto;
-  max-height: 350px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
@@ -192,14 +186,12 @@ dd div.report.open code {
   width: 100%;
   overflow: auto;
   border: solid 1px;
-}
-dd div.report.open textarea {
-  background: inherit;
-  color: inherit;
+  box-sizing: border-box;
+  padding: 0.4em;
+  font-size: 1.2em;
   font-family: monospace;
-  border: none;
-  width: 99%;
-  height: 200px;
+  white-space: pre;
+  max-height: 350px;
 }
 dd div.report code {
   display: none;

@@ -157,7 +157,7 @@
 					.toggleClass('collapsed', !collapsed)
 				;
 			})
-			.on('click', 'pre, textarea', function(e){
+			.on('click', 'code', function(e){
 				e.stopImmediatePropagation();
 			})
 			.on('click', 'dd > div', function(){

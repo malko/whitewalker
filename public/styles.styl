@@ -124,16 +124,11 @@ header{
 	display:flex;
 	padding:0;
 	margin:0;
-	transition: line-height  250ms ease-in, text-indent 350ms ease-out;
-	line-height:.675em;
-	text-indent:-150%;
 	text-align:center;
 	white-space:nowrap;
 	font-size:.8em;
-	&:hover{
-		line-height:2em;
-		text-indent:0px;
-	}
+	line-height:2em;
+
 	li{
 		display: inline-block;
 		&.status-ok{ background-color: #CCFFCC; }
@@ -142,6 +137,7 @@ header{
 		&.status-queued{ background-color: #FFFFCC; }
 		&.status-failed{ background-color: #FFCCCC; }
 		overflow:hidden;
+		text-overflow:ellipsis;
 	}
 }
 
@@ -185,7 +181,7 @@ dd{
 	margin:0 auto 1em auto;
 	padding:1em;
 	overflow:auto;
-	max-height:350px;
+	// max-height:350px;
 	@extend $border-radius;
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
@@ -207,14 +203,12 @@ dd{
 				width:100%;
 				overflow:auto;
 				border:solid 1px;
-			}
-			textarea{
-				background:inherit;
-				color:inherit;
+				box-sizing: border-box;
+				padding: .4em;
+				font-size: 1.2em;
 				font-family:monospace;
-				border:none;
-				width:99%;
-				height:200px;
+				white-space: pre;
+				max-height:350px;
 			}
 		}
 		code{
