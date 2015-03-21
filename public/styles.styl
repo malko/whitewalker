@@ -83,7 +83,12 @@ button:active{
 
 //-- this is the banner of the site
 header{
-	background:$darkblue;
+	background-color: $darkblue;
+	background: -webkit-linear-gradient(top, $darkblue 0%,$darkgrey 100%);
+	background: -moz-linear-gradient(top, $darkblue 0%,$darkgrey 100%);
+	background: -ms-linear-gradient(top, $darkblue 0%,$darkgrey 100%);
+	background: -o-linear-gradient(top, $darkblue 0%,$darkgrey 100%);
+	background: linear-gradient(top, $darkblue 0%,$darkgrey 100%);
 	color: $white;
 	position: relative;
 	h1{
@@ -94,6 +99,11 @@ header{
 		text-align:right;
 		padding:1em;
 	}
+}
+.logo{
+	float: left;
+	display: block;
+	margin: .5em;
 }
 //-- filters container in the header
 #filters{
