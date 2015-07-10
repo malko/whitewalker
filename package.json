@@ -16,7 +16,7 @@
     "d.js": "^0.7.0",
     "fs-promised": "^0.0.2",
     "whitewalker-adapters": "^0.0.1",
-    "nightwatch": "^0.5.31",
+    "nightwatch": "^0.7.5",
     "socket.io": "^1.0.6"
   },
   "devDependencies": {
